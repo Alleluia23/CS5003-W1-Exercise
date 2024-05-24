@@ -1,0 +1,94 @@
+
+html {
+    font-family: 'Comic Sans MS', sans-serif;
+}
+
+table {
+    border-collapse: collapse;
+    border: 2px solid #B4A0C8;
+    font-size: 0.9rem;
+    border-radius: 1px;
+}
+
+td, th {
+    border: 1px solid #AF9BC1;
+    padding: 15px 15px;
+}
+
+th {
+    font-weight: bold;
+    font-size: 15px;
+    background-color: #EBD7EB;
+    color: #483D8B;
+}
+
+td {
+    text-align: center;
+    line-height: 1.35;
+    letter-spacing: 0.04rem;
+    font-size: 12px;
+}
+
+tr:nth-child(even) td {
+    background-color: #FAF0FA;
+}
+
+tr:nth-child(odd) td {
+    background-color: #F5EBF5;
+}
+
+h1, h2 {
+    text-align: center;
+    font-family: 'Comic Sans MS', sans-serif;
+}
+
+h1 {
+    font-size: 27px;
+    color: #663399;
+}
+
+h2 {
+    font-size: 20px;
+    color: #9370DB;
+}
+
+.button {
+    border-radius: 10px;
+    border: 1px solid #ccc;  /*remove shadow*/
+    box-shadow: none;
+    padding: 4px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 11px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.page {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.flat-rounded {
+    border-radius: 10px;
+    border: 1px solid #ccc;  /*remove shadow*/
+    box-shadow: none;
+    padding: 4px;
+}
+
+.flat-rounded:hover {
+    border-color: #9370DB;
+}
+
+.flat-rounded:focus {
+    border-color: #663399;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

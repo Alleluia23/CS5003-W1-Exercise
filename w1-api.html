@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pokémon</title>
+    <link rel="stylesheet" href="pokemonStyle.css">
+</head>
+<body>
+    <h1>Pokédex</h1>
+
+    <p id="sss"></p>
+
+<!--    <div class="container">-->
+<!--        <button class="button" id="pppp" onclick="displayPokemon()">Get A Pokemon!!!</button>-->
+<!--    </div>-->
+
+    <div class="container">
+        <button class="button" id="pre" onclick="prePage()">Previous</button>
+        <button class="button" id="next" onclick="nextPage()">Next</button>
+    </div>
+
+    <div class="container">
+        <input class="flat-rounded" style="width: 50px" id="pageInput"></input>
+        <button class="button" id="goToPage" onclick="toPage()">Go</button>
+    </div>
+
+    <table id="ttt">
+        <thead>
+            <tr>
+                <th>Picture</th>
+                <th>Pokemon ID</th>
+                <th>Name</th>
+                <th>Height</th>
+                <th>Weight</th>
+                <th>Type</th>
+                <th>Ability</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <script>
+
+        function getPokemonId () {
+            if (Math.random() < 1025/(1025+277)) {
+                return Math.floor(Math.random()*1025+1)
+            } else {
+                return Math.floor(Math.random()*277+10001)
+            }
+        }
+
+        async function getPokemon() {
+            try {
+                const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${getPokemonId()}`);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.log(error);
+                return null;
+            }
+        }
+
+        async function displayPokemon() {
+            const pokemonData = await getPokemon();
+            let type = pokemonData.types.map(typeDetail => typeDetail.type.name).join('&');
+            // wait for finish
+            if (pokemonData) {
+                document.getElementById('sss').innerHTML = `<image src="${pokemonData.sprites.other.showdown.front_default}"></image> <image src="${pokemonData.sprites.front_default}"></image> ${pokemonData.id} ${pokemonData.name} ${type}`
+            }
+        }
+
+        // async function getAllPokemon() {
+        //     try {
+        //         const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`);
+        //         const data = await response.json();
+        //         return data;
+        //     } catch (error) {
+        //         console.log(error);
+        //         return null;
+        //     }
+        // }
+
+        let pokePerPage = 15
+        let pageNum = 1
+        function nextPage () {
+            document.getElementById('ttt').getElementsByTagName('tbody')[0].innerHTML = '';
+            pageNum ++;
+            displayAllPokemon();
+            console.log(pageNum)
+        }
+
+        function prePage () {
+            document.getElementById('ttt').getElementsByTagName('tbody')[0].innerHTML = '';
+            pageNum --;
+            displayAllPokemon();
+            console.log(pageNum)
+        }
+
+        function toPage () {
+            document.getElementById('ttt').getElementsByTagName('tbody')[0].innerHTML = '';
+            pageNum = document.getElementById('pageInput').value;
+            displayAllPokemon();
+        }
+
+        async function getAllPokemon() {
+            try {
+                const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${pokePerPage}&offset=${(pageNum-1)*pokePerPage}`);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.log(error);
+                return null;
+            }
+        }
+
+        async function getAllPokemonDetails(url) {
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.log(error);
+                return null;
+            }
+        }
+
+        async function displayAllPokemon() {
+            const pokemonData = await getAllPokemon();
+            let pokemonResults = pokemonData.results
+            let eachPokemon = pokemonResults.map(pokemon => {
+                return pokemon
+            })
+
+            const table = document.getElementById('ttt').getElementsByTagName('tbody')[0]
+
+            for (let pokemon of eachPokemon) {
+                const pokemonDetails = await getAllPokemonDetails(pokemon.url)
+                let type = pokemonDetails.types.map(typeDetail => typeDetail.type.name).join('&');
+
+                let ability = ''
+                for (let i = 0; i < pokemonDetails.abilities.length; i++) {
+                    ability += (`${i+1}. ${pokemonDetails.abilities[i].ability.name} <br>`);
+                }
+
+                if (pokemonDetails) {
+                    // document.getElementById('sss').innerHTML += `<image src="${pokemonDetails.sprites.other.showdown.front_default}"></image> <image src="${pokemonDetails.sprites.front_default}"></image> ${pokemonDetails.id} ${pokemonDetails.name} ${type} <br>`
+                    console.log(pokemonDetails)
+                    newPokemon = `<tr>
+                                    <!-- <td><image src="${pokemonDetails.sprites.front_default}"></image></td> -->
+                                    <td><image src="${pokemonDetails.sprites.other.showdown.front_default}"></image></td>
+                                    <td>${pokemonDetails.id}</td>
+                                    <td>${pokemonDetails.name}</td>
+                                    <td>${pokemonDetails.height}</td>
+                                    <td>${pokemonDetails.weight}</td>
+                                    <td>${type}</td>
+                                    <td>${ability}</td>
+                                 </tr>`
+                    table.innerHTML += newPokemon
+                }
+            }
+        }
+        displayAllPokemon()
+
+
+
+
+
+        fetch('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0')
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.log(error))
+    </script>
+</body>
+</html>
